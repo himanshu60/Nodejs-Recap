@@ -3,10 +3,10 @@ const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true, minlength: 2, maxlength: 50 },
-    lastName: { type: String, required: true },
+    lastName: { type: String },
     emailId: { type: String, required: true, unique: true, lowercase: true, trim: true, validate: [validator.isEmail, 'Invalid email address'] },
     password: { type: String, required: true, minlength: 8, validate: [validator.isStrongPassword, 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol'] },
-    age: { type: Number, required: true, min: 18, max: 100 },
+    age: { type: Number, min: 18, max: 100 },
     gender: { type: String, required: true },
     about: { type: String, maxlength: 500 },
     skills: { type: [String], default: [] },
