@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const dbURI = 'mongodb+srv://raghuvanshi:raghuvanshi@cluster0.pd5wkd1.mongodb.net/devTinder?retryWrites=true&w=majority';
+const dbURI = process.env.dbURI ;
+// console.log("Database URI:", dbURI); // Log the database URI to verify it's being read correctly    
 
 const connectDB = async () => {
     await mongoose.connect(dbURI);
