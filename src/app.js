@@ -1,35 +1,37 @@
 const express = require('express');
+const { connectDB } = require("./config/database")
 const app = express();
+app.use(express.json());
+const User = require("./models/user");
 const port = 3000;
-const {adminAuth,userAuth } = require('./middlewares/auth');
 
-app.use("/admin", adminAuth);
-
-
-app.get("/admin/getAllData", (req, res) => {
-  res.send("All data retrieved");
-});
-
-app.get("/user/getUserData",userAuth, (req, res) => {
-  res.send("User data retrieved");
-});
-
-app.get("/login", (req, res) => {
-    try{
-        throw new Error("Simulated error in login route"); // Simulate an error for testing 
-        res.send("Login page");
-    }catch(err){
-        // console.error(err.stack);
-        res.status(500).send("Internal Server Error");
+app.post("/signup", async (req, res) => {
+    const data =req.body
+    // console.log("Received signup data:", data);
+    const user = new User(data);
+    try {
+        // console.log("Signup route triggered");
+        // const user = new User({
+        //     firstName:"Himanshu",
+        //     lastName:"Raghuvanshi",
+        //     emailId:"himanshu@example.com",
+        //     password:"password123",
+        //     age:25,
+        //     gender:"Male"
+        // })
+        // console.log("User data received:", user);
+        await user.save();
+        res.status(201).json({ message: "User created successfully", user });
+    } catch (err) {
+        res.status(500).json({ message: "Error occurred while signing up" });
     }
-});
-
-
-app.use("/",(err,req,res,next)=>{
-    // console.error(err.stack);
-    res.status(500).send("Internal Server Error from global error handler");
 })
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+connectDB().then(() => {
+    console.log("Database connected successfully");
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
+}).catch((err) => {
+    console.error("Database connection error:", err);
+})
