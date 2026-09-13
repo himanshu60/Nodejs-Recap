@@ -2,14 +2,19 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+app.use("/admin", (req, res, next) => {
+    console.log("Admin route accessed");
+    const token = "xyz";
+    const isAuthorized = token === "xyz"; // Replace with your actual authorization logic
+
+    if (!isAuthorized) {
+        return res.status(403).send("Unauthorized access");
+    }
+    next();
+});
+
 
 app.get("/admin/getAllData", (req, res) => {
-  const token = "xyz123"; // Replace with your actual token
-  const isAuthorized = token === "x1yz123"; // Replace with your actual authorization logic
-
-  if (!isAuthorized) {
-    return res.status(403).send("Unauthorized access");
-  }
   res.send("All data retrieved");
 });
 
