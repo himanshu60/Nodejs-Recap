@@ -74,10 +74,15 @@ app.delete("/deleteUser", async (req, res) => {
     }
 });
 
-app.patch("/updateUser", async (req, res) => {
-    const userId = req.body.userId;
-    const updateData =req.body
+app.patch("/updateUser/:userId", async (req, res) => {
+    const userId = req.params?.userId;
+    const updateData = req.body
     try {
+        const AllowedUpdates = ["firstName", "lastName", "password", "age", "gender", "about", "skills", "photoUrl"];
+        const isValidUpdate = Object.keys(updateData).every((key) => AllowedUpdates.includes(key));
+        if (!isValidUpdate) {
+            return res.status(400).send({ message: "Invalid update fields" });
+        }
         if (!userId) {
             res.status(404).send({ message: "userId not found" })
         } else {
