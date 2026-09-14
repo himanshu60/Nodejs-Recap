@@ -1,6 +1,6 @@
 const validator = require('validator');
 const validateSignupData = (req) => {
-    console.log("Validating signup data:", req.body);
+    // console.log("Validating signup data:", req.body);
     const { firstName, emailId, password } = req.body;
     if (!firstName || !emailId || !password) {
         throw new Error("Missing required fields: firstName, emailId, and password are required");

@@ -1,5 +1,5 @@
 const adminAuth= (req, res, next)=>{
-    console.log("Admin authentication middleware triggered");
+    // console.log("Admin authentication middleware triggered");
    const token = "xyz";
    const isAuthorized = token === "xyz"; // Replace with your actual authorization logic
 
@@ -12,7 +12,7 @@ const adminAuth= (req, res, next)=>{
 }
 
 const userAuth= (req,res,next)=>{
-    console.log("User authentication middleware triggered for user route");    
+    // console.log("User authentication middleware triggered for user route");    
     const token ="abc";
     const isAuthorized = token === "abc"; // Replace with your actual authorization logic
 
