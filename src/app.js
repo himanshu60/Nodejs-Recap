@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const jwt = require('jsonwebtoken');
+const { userAuth } = require("./middlewares/auth")
 const port = process.env.PORT || 3000;
 
 app.post("/signup", async (req, res) => {
@@ -47,8 +48,8 @@ app.post("/login", async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         const isPasswordValid = await bcrypt.compare(password, hashedPassword);
-        const token = jwt.sign({ _id: user._id }, "DEV@Tender$3008");
-        console.log("token", token)
+        const token = jwt.sign({ _id: user._id }, "DEV@Tender$3008", { expiresIn: "1d" });
+        // console.log("token", token)
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid password" });
         }
@@ -59,23 +60,11 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
     try {
-        const cookies = req.cookies;
-        const { token } = cookies
-        if(!token){
-           res.status(400).send("Invalid token") 
-        }
-        const decoded = jwt.verify(token, "DEV@Tender$3008")
-        const { _id } = decoded;
-        const user = await User.findById(_id)
-        if(!user){
-           res.status(404).send("user not found!") 
-        }
-        res.send(user)
-        //   console.log(decoded)
-        //   console.log("Cookies received:", cookies);
-        res.send("Profile route accessed successfully");
+        const user = req.user;
+        // console.log(user)
+        res.status(200).send({ message: "Profile route accessed successfully", userData: user })
     } catch (err) {
         res.status(500).json({ message: "Error occurred while accessing profile", error: err.message });
     }
